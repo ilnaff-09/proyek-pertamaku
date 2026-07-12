@@ -3,67 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rumus Fisika - Portofolio Saya</title>
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .card{
-            background-color: white;
-            padding: 40px;
-            border-radius: 0 10px 25px rgba(0,0,0,0,1);
-            text-align: center;
-            border-left: 8px solid #2563eb;
-        }
-        h1{
-            color: #1e293b;
-        }
-        .rumus{
-            font-size: 24px;
-            background: #e2e8f0;
-            padding: 10px 20px;
-            border-radius: 12px;
-            margin-top: 10px;
-            display: inline-block;
-        }
-        button{
-            background-color: #2463eb;
-            color:white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 20px;
-        }
-        button:hover{
-            background-color: #1d4ed8;
-        }
-    </style>
+    <title>Portofolio Fisika - Ilnaff</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="card">
-        <h1>⚡ Hukum Newton ke-2 ⚡</h1>
-        <p>Gaya = Massa × Percepatan</p>
-        <div class="rumus" id="rumusDisplay">F = m × a</div>
-        <br>
-        <button onclick="hitungGaya()">Hitung Gaya (10kg, 2m/s²)</button>
-        <p id="hasil" style="margin-top: 20px; font-weight: bold; color: #2563eb"></p>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">⚡ Ilnaff.Dev</div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Hai, Saya <span>Ilnaff</span></h1>
+        <p>Mahasiswa Fisika | Belajar Full Stack Development</p>
+    </section>
+
+    <!-- CARD UTAMA -->
+    <div class="container">
+        <div class="card">
+            <h2>⚡ Hukum Newton ke-2</h2>
+            <p>Gaya = Massa × Percepatan</p>
+            <div class="rumus-box">F = m × a</div>
+            <br>
+            <button class="btn" onclick="hitungGaya()">Hitung Gaya (10kg, 2m/s²)</button>
+            <p id="hasil"></p>
+        </div>
     </div>
+
+    <!-- FOOTER -->
+    <footer>
+        &copy; 2026 Ilnaff. Built with ❤️ and JavaScript.
+    </footer>
+
     <script>
-        // ini adalah JavaScript pertama saya
-        function hitungGaya(){
-            const massa = 10; //kg
-            const percepatan = 2; //m/s²
-            const gaya = gaya * percepatan;
-            document.getElementById("hasil").innerHTML = "💪 Gaya yang dihasilkan adalah " + gaya +"Newton";
+        function hitungGaya() {
+            const massa = 10;
+            const percepatan = 2;
+            const gaya = massa * percepatan;
+            document.getElementById("hasil").innerHTML = "💪 Gaya = " + gaya + " Newton";
         }
     </script>
+
 </body>
 </html>
