@@ -21,34 +21,138 @@
     <!-- HERO -->
     <section class="hero">
         <h1>Hai, Saya <span>Ilnaff</span></h1>
-        <p>Mahasiswa Pendidikan Fisika | Belajar Full Stack Development</p>
+        <p>Mahasiswa Fisika | Belajar Full Stack Development</p>
     </section>
 
-    <!-- CARD UTAMA -->
-    <div class="container">
+    <!-- SECTION KALKULATOR (FLEX CONTAINER UNTUK 2 CARD) -->
+    <div class="container-calculator">
+        <!-- CARD 1: Hukum Newton -->
         <div class="card">
             <h2>⚡ Hukum Newton ke-2</h2>
             <p>Gaya = Massa × Percepatan</p>
             <div class="rumus-box">F = m × a</div>
-            <br>
-            <button class="btn" onclick="hitungGaya()">Hitung Gaya (10kg, 2m/s²)</button>
-            <p id="hasil"></p>
+            
+            <!-- INPUT DINAMIS -->
+            <div class="input-group">
+                <input type="number" id="massa" placeholder="Massa (kg)" value="10">
+                <input type="number" id="percepatan" placeholder="Percepatan (m/s²)" value="2">
+            </div>
+            <button class="btn" onclick="hitungGaya()">Hitung Gaya</button>
+            <p id="hasilGaya" class="hasil-text">💪 Gaya = 20 Newton</p>
+        </div>
+
+        <!-- CARD 2: Energi Kinetik (BARU!) -->
+        <div class="card">
+            <h2>🌀 Energi Kinetik</h2>
+            <p>Ek = ½ × Massa × Kecepatan²</p>
+            <div class="rumus-box">Ek = ½ m v²</div>
+            
+            <div class="input-group">
+                <input type="number" id="massa2" placeholder="Massa (kg)" value="5">
+                <input type="number" id="kecepatan" placeholder="Kecepatan (m/s)" value="3">
+            </div>
+            <button class="btn" onclick="hitungEnergi()">Hitung Energi</button>
+            <p id="hasilEnergi" class="hasil-text">🌀 Ek = 22.5 Joule</p>
         </div>
     </div>
 
+    <!-- SECTION PROYEK (Dinamis dari JavaScript) -->
+    <section class="projects-section">
+        <h2>📂 Proyek Saya</h2>
+        <div id="project-list" class="project-grid">
+            <!-- Nanti diisi otomatis oleh JavaScript -->
+        </div>
+    </section>
+
     <!-- FOOTER -->
     <footer>
-        &copy; 2026 Ilnaff. Built with ❤️ and JavaScript.
+        &copy; 2026 Ilnaff. Dibangun dengan ❤️ dan JavaScript.
     </footer>
 
     <script>
+        // ==========================================
+        // 1. FUNGSI KALKULATOR DINAMIS
+        // ==========================================
         function hitungGaya() {
-            const massa = 10;
-            const percepatan = 2;
-            const gaya = massa * percepatan;
-            document.getElementById("hasil").innerHTML = "💪 Gaya = " + gaya + " Newton";
-        }
-    </script>
+            // Ambil nilai dari input field
+            const massa = parseFloat(document.getElementById('massa').value);
+            const percepatan = parseFloat(document.getElementById('percepatan').value);
 
+            // Validasi: jika bukan angka, tampilkan peringatan
+            if (isNaN(massa) || isNaN(percepatan)) {
+                document.getElementById('hasilGaya').innerHTML = "⚠️ Masukkan angka yang valid!";
+                return;
+            }
+
+            const gaya = massa * percepatan;
+            document.getElementById('hasilGaya').innerHTML = `💪 Gaya = ${gaya} Newton`;
+        }
+
+        function hitungEnergi() {
+            const massa = parseFloat(document.getElementById('massa2').value);
+            const kecepatan = parseFloat(document.getElementById('kecepatan').value);
+
+            if (isNaN(massa) || isNaN(kecepatan)) {
+                document.getElementById('hasilEnergi').innerHTML = "⚠️ Masukkan angka yang valid!";
+                return;
+            }
+
+            const energi = 0.5 * massa * (kecepatan * kecepatan);
+            document.getElementById('hasilEnergi').innerHTML = `🌀 Ek = ${energi} Joule`;
+        }
+
+        // ==========================================
+        // 2. DATA PROYEK (ARRAY OF OBJECTS)
+        // ==========================================
+        const proyekSaya = [
+            {
+                judul: "Simulasi Gerak Parabola",
+                deskripsi: "Visualisasi lintasan peluru dengan HTML Canvas (Fisika)",
+                tag: "JavaScript"
+            },
+            {
+                judul: "Dashboard Sensor IoT",
+                deskripsi: "Menampilkan data suhu dan kelembaban dari Arduino",
+                tag: "React + Node.js"
+            },
+            {
+                judul: "Kalkulator Fisika Interaktif",
+                deskripsi: "Website ini sendiri! Menghitung Gaya dan Energi Kinetik",
+                tag: "HTML + CSS + JS"
+            }
+        ];
+
+        // ==========================================
+        // 3. RENDER PROYEK KE HTML
+        // ==========================================
+        function renderProyek() {
+            const container = document.getElementById('project-list');
+            
+            // Loop melalui array dan buat elemen HTML
+            let htmlString = '';
+            for (let i = 0; i < proyekSaya.length; i++) {
+                const proyek = proyekSaya[i];
+                htmlString += `
+                    <div class="project-card">
+                        <h3>${proyek.judul}</h3>
+                        <p>${proyek.deskripsi}</p>
+                        <span class="tag">${proyek.tag}</span>
+                    </div>
+                `;
+            }
+            
+            // Masukkan ke dalam div
+            container.innerHTML = htmlString;
+        }
+
+        // Jalankan fungsi render saat halaman dimuat
+        renderProyek();
+
+        // Bonus: Panggil hitungGaya dan hitungEnergi otomatis saat pertama kali buka agar tidak kosong
+        window.onload = function() {
+            hitungGaya();
+            hitungEnergi();
+        };
+    </script>
 </body>
 </html>
