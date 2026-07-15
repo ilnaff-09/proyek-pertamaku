@@ -70,13 +70,11 @@ renderProyek();
 // ==========================================
 let catatanEksperimen = [];
 
-// 3a. Fungsi untuk menyimpan ke LocalStorage
 function simpanKeLocalStorage() {
     localStorage.setItem('dataCatatan', JSON.stringify(catatanEksperimen));
     console.log("💾 Data berhasil disimpan ke LocalStorage!");
 }
 
-// 3b. Fungsi untuk memuat dari LocalStorage
 function loadDariLocalStorage() {
     const dataTersimpan = localStorage.getItem('dataCatatan');
     
@@ -90,13 +88,12 @@ function loadDariLocalStorage() {
     renderCatatan();
 }
 
-// 3c. Fungsi untuk menyimpan catatan baru
 function simpanCatatan() {
     const judul = document.getElementById('inputJudul').value;
     const hasil = document.getElementById('inputHasil').value;
 
     if (judul === "" || hasil === "") {
-        alert("⚠️ Judul dan hasil harus diisi!");
+        showToast("Judul dan hasil harus diisi!", "error");
         return;
     }
 
@@ -109,10 +106,10 @@ function simpanCatatan() {
     document.getElementById('inputHasil').value = "";
 
     renderCatatan();
-    simpanKeLocalStorage(); // <-- Simpan ke LocalStorage
+    simpanKeLocalStorage();
+    showToast("Catatan eksperimen berhasil disimpan! ✅", "success");
 }
 
-// 3d. Fungsi untuk menampilkan catatan
 function renderCatatan() {
     const container = document.getElementById('daftarCatatan');
     let html = "";
@@ -133,15 +130,108 @@ function renderCatatan() {
 
     container.innerHTML = html;
 }
-
-// Jalankan render pertama kali (tampilkan "Belum ada catatan")
 renderCatatan();
 
 // ==========================================
-// 4. OTOMATIS KALKULATOR & LOAD DATA SAAT PERTAMA LOAD
+// 4. OTOMATIS KALKULATOR & LOAD DATA SAAT LOAD
 // ==========================================
 window.onload = function() {
     hitungGaya();
     hitungEnergi();
-    loadDariLocalStorage(); // <-- Muat data dari LocalStorage
+    loadDariLocalStorage();
+    applyThemeOnLoad(); // <-- Terapkan tema yang tersimpan
+    initScrollAnimations(); // <-- Aktifkan animasi scroll
 };
+
+// ==========================================
+// 5. FUNGSI TOAST NOTIFICATION
+// ==========================================
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    
+    if (!container) {
+        console.warn("Toast container tidak ditemukan di HTML!");
+        return;
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️';
+    toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${message}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+}
+
+// ==========================================
+// 6. DARK MODE TOGGLE (FITUR BARU!)
+// ==========================================
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // Ubah ikon tombol
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+        btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+function applyThemeOnLoad() {
+    const savedTheme = localStorage.getItem('theme');
+    const html = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    
+    // Jika tidak ada tema tersimpan, cek preferensi sistem (opsional)
+    if (savedTheme) {
+        html.setAttribute('data-theme', savedTheme);
+        if (btn) {
+            btn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        }
+    } else {
+        // Default: light, tapi tombol tetap 🌙
+        if (btn) btn.textContent = '🌙';
+    }
+}
+
+// Event listener untuk tombol
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+        btn.addEventListener('click', toggleTheme);
+    }
+});
+
+// ==========================================
+// 7. SCROLL ANIMATIONS (FITUR BARU!)
+// ==========================================
+function initScrollAnimations() {
+    const hiddenElements = document.querySelectorAll('.hidden');
+    
+    if (hiddenElements.length === 0) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-up');
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px' // Sedikit trigger lebih awal
+    });
+    
+    hiddenElements.forEach(el => observer.observe(el));
+}
