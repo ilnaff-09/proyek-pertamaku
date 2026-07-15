@@ -66,10 +66,31 @@ function renderProyek() {
 renderProyek();
 
 // ==========================================
-// 3. CATATAN EKSPERIMEN (BARU!)
+// 3. CATATAN EKSPERIMEN + LOCALSTORAGE
 // ==========================================
-const catatanEksperimen = [];
+let catatanEksperimen = [];
 
+// 3a. Fungsi untuk menyimpan ke LocalStorage
+function simpanKeLocalStorage() {
+    localStorage.setItem('dataCatatan', JSON.stringify(catatanEksperimen));
+    console.log("💾 Data berhasil disimpan ke LocalStorage!");
+}
+
+// 3b. Fungsi untuk memuat dari LocalStorage
+function loadDariLocalStorage() {
+    const dataTersimpan = localStorage.getItem('dataCatatan');
+    
+    if (dataTersimpan) {
+        catatanEksperimen = JSON.parse(dataTersimpan);
+        console.log("📂 Data berhasil dimuat dari LocalStorage:", catatanEksperimen);
+    } else {
+        console.log("📭 Belum ada data tersimpan di LocalStorage.");
+    }
+    
+    renderCatatan();
+}
+
+// 3c. Fungsi untuk menyimpan catatan baru
 function simpanCatatan() {
     const judul = document.getElementById('inputJudul').value;
     const hasil = document.getElementById('inputHasil').value;
@@ -88,9 +109,10 @@ function simpanCatatan() {
     document.getElementById('inputHasil').value = "";
 
     renderCatatan();
-    console.log("Catatan saat ini:", catatanEksperimen);
+    simpanKeLocalStorage(); // <-- Simpan ke LocalStorage
 }
 
+// 3d. Fungsi untuk menampilkan catatan
 function renderCatatan() {
     const container = document.getElementById('daftarCatatan');
     let html = "";
@@ -111,12 +133,15 @@ function renderCatatan() {
 
     container.innerHTML = html;
 }
+
+// Jalankan render pertama kali (tampilkan "Belum ada catatan")
 renderCatatan();
 
 // ==========================================
-// 4. OTOMATIS KALKULATOR SAAT PERTAMA LOAD
+// 4. OTOMATIS KALKULATOR & LOAD DATA SAAT PERTAMA LOAD
 // ==========================================
 window.onload = function() {
     hitungGaya();
     hitungEnergi();
+    loadDariLocalStorage(); // <-- Muat data dari LocalStorage
 };
